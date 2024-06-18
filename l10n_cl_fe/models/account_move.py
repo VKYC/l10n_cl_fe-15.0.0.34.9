@@ -297,6 +297,7 @@ class AccountMove(models.Model):
     sequence_number_next_prefix = fields.Integer(
         compute='_get_sequence_prefix'
     )
+    tax_cash_basis_move_id = fields.Many2one(comodel_name='account.move')
 
     @api.depends(
         'line_ids.matched_debit_ids.debit_move_id.move_id.line_ids.amount_residual',
@@ -1198,7 +1199,7 @@ class AccountMove(models.Model):
                 _apply_global_gdr(self, gdr_amount, gdr_amount_currency, gr, gdr, taxes)
         self.amount_untaxed_global_discount = total_gd
         self.amount_untaxed_global_recargo = total_gr
-        
+
     def _recompute_dynamic_lines(self, recompute_all_taxes=False, recompute_tax_base_amount=False):
         for invoice in self:
             if invoice.is_invoice(include_receipts=True):
