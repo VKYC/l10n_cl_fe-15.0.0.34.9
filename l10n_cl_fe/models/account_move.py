@@ -70,7 +70,7 @@ class AccountMove(models.Model):
         return move_type in self.get_invoice_types()
 
     def _default_journal_document_class_id(self):
-        if not self.env["ir.model"].search([("model", "=", "sii.document_class")]) or self.document_class_id:
+        if not self.env["ir.model"].sudo().search([("model", "=", "sii.document_class")]) or self.document_class_id:
             return False
         journal = self.env["account.move"].default_get(["journal_id"])["journal_id"]
         default_type = self._context.get("default_move_type", "")
@@ -128,7 +128,7 @@ class AccountMove(models.Model):
         return False
 
     def _default_document_class_id(self):
-        if not self.env["ir.model"].search([("model", "=", "sii.document_class")]):
+        if not self.env["ir.model"].sudo().search([("model", "=", "sii.document_class")]):
             return False
         jdc = self._default_journal_document_class_id()
         return jdc.sii_document_class_id.id
